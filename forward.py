@@ -116,7 +116,7 @@ def main():
 
     if record:
         env.monitor.close()
-        gym.upload("/tmp/gym-results", algorithm_id="random", api_key="sk_05nDI3DTZOxRqUTFvCwg")
+        gym.upload("/tmp/gym-results", algorithm_id="random", api_key="API_KEY")
 
 
 
