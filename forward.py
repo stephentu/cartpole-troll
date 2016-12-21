@@ -70,7 +70,7 @@ def forward(state, u):
     return _forward_inplace(state, u)
 
 
-def make_sequence(state, lookahead=14):
+def make_sequence(state, lookahead=12):
     best_inp, best_cost = None, None
     for inp in it.product([0, 1], repeat=lookahead):
         inp = np.array(inp, dtype=int)
@@ -84,17 +84,18 @@ def make_sequence(state, lookahead=14):
 
 def main():
 
-    #state = np.random.uniform(low=-0.05, high=0.05, size=(4,))
-    #best_inp = make_sequence(state)
-    #print(forward(state, best_inp))
+    record = True
 
     env = gym.make('CartPole-v0')
+
+    if record:
+        env.monitor.start("/tmp/gym-results")
 
     u_ptr = None
     u = None
     take_max = 3
 
-    for i_episode in range(20):
+    for i_episode in range(110):
         observation = env.reset()
         for t in range(1000):
             env.render()
@@ -112,6 +113,10 @@ def main():
             if done:
                 print("Episode finished after {} timesteps".format(t+1))
                 break
+
+    if record:
+        env.monitor.close()
+        gym.upload("/tmp/gym-results", algorithm_id="random", api_key="sk_05nDI3DTZOxRqUTFvCwg")
 
 
 
