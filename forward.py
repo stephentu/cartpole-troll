@@ -9,7 +9,6 @@ import gym
 from numba import jit
 
 
-#@jit("void(float64[:], int64[:])", nopython=True)
 @jit(nopython=True)
 def _forward_inplace(state, u):
     gravity = 9.8
