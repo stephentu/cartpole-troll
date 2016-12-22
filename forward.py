@@ -41,7 +41,7 @@ def _forward_inplace(state, u):
         x_dot = x_dot + tau * xacc
         theta = theta + tau * theta_dot
         theta_dot = theta_dot + tau * thetaacc
-        cost += amp * (x*x + x_dot*x_dot + theta*theta + theta_dot*theta_dot)
+        cost += amp * (0.2*x*x + x_dot*x_dot + 2.0*theta*theta + theta_dot*theta_dot)
         done =  x < -x_threshold \
                 or x > x_threshold \
                 or theta < -theta_threshold_radians \
@@ -89,15 +89,15 @@ def main():
     env = gym.make('CartPole-v0')
 
     if record:
-        env.monitor.start("/tmp/gym-results")
+        env.monitor.start("/tmp/gym-results-1")
 
     u_ptr = None
     u = None
     take_max = 3
 
-    for i_episode in range(110):
+    for i_episode in range(100):
         observation = env.reset()
-        for t in range(1000):
+        for t in range(200):
             env.render()
 
             if u is None or u_ptr >= min(len(u), take_max):
@@ -105,23 +105,15 @@ def main():
                 u_ptr = 0
                 cost, done = forward(observation, u)
 
-
             observation, reward, done, info = env.step(u[u_ptr])
             u_ptr += 1
-            print("reward, done, info")
-            print(reward, done, info)
             if done:
                 print("Episode finished after {} timesteps".format(t+1))
                 break
 
     if record:
         env.monitor.close()
-        gym.upload("/tmp/gym-results", algorithm_id="random", api_key="sk_05nDI3DTZOxRqUTFvCwg")
-
 
 
 if __name__ == '__main__':
     main()
-
-
-
